@@ -1,0 +1,103 @@
+info:
+  description: ''
+  title: ''
+  version: ''
+openapi: 3.0.0
+paths:
+  /api-auth/login/:
+    post:
+      description: 'Check the credentials and return the REST Token
+
+        if the credentials are valid and authenticated.
+
+        Calls Django Auth login method to register User ID
+
+        in Django session framework
+
+
+        Accept the following POST parameters: username, password
+
+        Return the REST Framework Token Object''s key.'
+      operationId: login_create
+      tags:
+      - login
+  /api-auth/logout/:
+    get:
+      description: 'Calls Django logout method and delete the Token object
+
+        assigned to the current User object.
+
+
+        Accepts/Returns nothing.'
+      operationId: logout_list
+      tags:
+      - logout
+    post:
+      description: 'Calls Django logout method and delete the Token object
+
+        assigned to the current User object.
+
+
+        Accepts/Returns nothing.'
+      operationId: logout_create
+      tags:
+      - logout
+  /api-auth/registration/:
+    post:
+      operationId: registration_create
+      tags:
+      - registration
+  /api-auth/user/:
+    get:
+      description: 'Reads and updates UserModel fields
+
+        Accepts GET, PUT, PATCH methods.
+
+
+        Default accepted fields: username, first_name, last_name
+
+        Default display fields: pk, username, email, first_name, last_name
+
+        Read-only fields: pk, email
+
+
+        Returns UserModel fields.'
+      operationId: user_read
+      tags:
+      - user
+    patch:
+      description: 'Reads and updates UserModel fields
+
+        Accepts GET, PUT, PATCH methods.
+
+
+        Default accepted fields: username, first_name, last_name
+
+        Default display fields: pk, username, email, first_name, last_name
+
+        Read-only fields: pk, email
+
+
+        Returns UserModel fields.'
+      operationId: user_partial_update
+      tags:
+      - user
+    put:
+      description: 'Reads and updates UserModel fields
+
+        Accepts GET, PUT, PATCH methods.
+
+
+        Default accepted fields: username, first_name, last_name
+
+        Default display fields: pk, username, email, first_name, last_name
+
+        Read-only fields: pk, email
+
+
+        Returns UserModel fields.'
+      operationId: user_update
+      tags:
+      - user
+servers:
+- url: ''
