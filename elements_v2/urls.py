@@ -32,11 +32,11 @@ urlpatterns = [
         template_name='swagger-ui.html',
         extra_context={'schema_url': 'openapi-schema'}
     ), name='swagger-ui'),
-    path('api-auth/', include('rest_auth.urls')),
-    path('api/', include('rest_framework.urls')),
+    path('api/auth/', include('rest_auth.urls')),
+    # path('api/', include('rest_framework.urls')),
     # path('user/', include('user.urls')),
-    path('api-auth/registration/', include('rest_auth.registration.urls')),
-    path('api-auth/registration/account-confirm-email/<str:key>', confirm_email, name='account_confirm_email'),
+    path('api/auth/registration/', include('rest_auth.registration.urls')),
+    # path('api-auth/registration/account-confirm-email/<str:key>', confirm_email, name='account_confirm_email'),
     # path(r'api/auth/login/', 'rest_framework_jwt.views.obtain_jwt_token'),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)

@@ -1,56 +1,76 @@
 info:
-  description: ''
-  title: ''
-  version: ''
+  description: 'Test description'
+  title: 'Test title'
+  version: 'first'
 openapi: 3.0.0
 tags:
-- name: auth
-  description: "Auth tools"
-#  externalDocs:
-#    description: "Find out more"
-#    url: "http://127.0.0.1:8000"
+  - name: auth
+    description: "Auth tools"
 servers:
-- url: http://127.0.0.1:8000
-- url: https://127.0.0.1:8000
+  - url: http://127.0.0.1:8000
 paths:
-  /api-auth/user/:
+  /api/auth/user/:
     get:
       tags:
         - auth
-      summary: Update an existing pet
-      operationId: updatePet
-      parameters:
-      - name: status
-        in: query
-        description: Status values that need to be considered for filter
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-            default: available
-            enum:
-            - available
-            - pending
-            - sold
+      summary: Get user info
+      operationId: getUser
       responses:
-        400:
-          description: Invalid ID supplied
+        200:
+          description: Sucsess
           content: {}
-        404:
-          description: Pet not found
-          content: {}
-        405:
-          description: Validation exception
-          content: {}
-
       security:
         - bearerAuth:
-            - write:pets
-            - read:pets
+            - write:auth
+            - read:auth
+  /api/auth/registration/:
+    post:
+      tags:
+        - auth
+      summary: Create new user
+      operationId: createUser
+      parameters:
+        - name: email
+          in: form
+          description: User email
+          required: true
+          schema: 
+            type: string
+        - name: password1
+          in: form
+          description: Password
+          required: true
+          schema:
+            type: string
+        - name: password2
+          in: form
+          description: Password repeat
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Create User
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        200:
+          description: Sucsess
+          content: {}
 components:
+  schemas:
+    CreateUser:
+      type: object
+      properties:
+        email:
+          type: string
+        password1:
+          type: string
+        password2:
+          type: string
+      xml:
+        name: CreateUser
   securitySchemes:
     bearerAuth:            # arbitrary name for the security scheme
       type: http
