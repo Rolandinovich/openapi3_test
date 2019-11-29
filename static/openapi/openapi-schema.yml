@@ -5,59 +5,95 @@ info:
 openapi: 3.0.0
 tags:
   - name: auth
-    description: "Auth tools"
+    description: Auth tools
+  - name: user
+    description: User info
 servers:
   - url: http://127.0.0.1:8000
 paths:
-  /api/auth/user/:
-    get:
-      tags:
-        - auth
-      summary: Get user info
-      operationId: getUser
-      responses:
-        200:
-          description: Sucsess
-          content: {}
-      security:
-        - bearerAuth:
-            - write:auth
-            - read:auth
   /api/auth/registration/:
     post:
       tags:
         - auth
       summary: Create new user
       operationId: createUser
-      parameters:
-        - name: email
-          in: form
-          description: User email
-          required: true
-          schema: 
-            type: string
-        - name: password1
-          in: form
-          description: Password
-          required: true
-          schema:
-            type: string
-        - name: password2
-          in: form
-          description: Password repeat
-          required: true
-          schema:
-            type: string
       requestBody:
         description: Create User
         content:
-          '*/*':
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+          application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/CreateUser'
       responses:
+        201:
+          description: Key for authtorization
+          content:
+            application/json:
+              schema:
+                properties:
+                  key:
+                    type: string
+  /api/auth/login/:
+    post:
+      tags:
+        - auth
+      summary: Get authtorization key
+      operationId: createUser
+      requestBody:
+        description: Create User
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
         200:
-          description: Sucsess
-          content: {}
+          description: Key for authtorization
+          content:
+            application/json:
+              schema:
+                properties:
+                  key:
+                    type: string
+  /api/user/:
+    get:
+      tags:
+        - user
+      summary: Get user data
+      operationId: getUserData
+      responses:
+        200:
+          description: Get user data. Need authtorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDataGet'
+      security:
+        - bearerAuth: []
+    patch:
+      tags:
+        - user
+      summary: Put user data
+      operationId: gutUserData
+      requestBody:
+        description: Put user data. Need authtorization
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserDataPatch'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDataPatch'
+      responses:
+        200:
+          description: User data. Need authtorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDataGet'
+      security:
+        - bearerAuth: []
 components:
   schemas:
     CreateUser:
@@ -71,106 +107,45 @@ components:
           type: string
       xml:
         name: CreateUser
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      xml:
+        name: Login
+    UserDataGet:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        avatar:
+          type: string
+      xml:
+        name: UserData
+    UserDataPatch:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        avatar:
+          type: string
+          format: binary
+      xml:
+        name: UserData
+
   securitySchemes:
-    bearerAuth:            # arbitrary name for the security scheme
+    bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-#
-#  /api-auth/login/:
-#    post:
-#      description: 'Check the credentials and return the REST Token
-#
-#        if the credentials are valid and authenticated.
-#
-#        Calls Django Auth login method to register User ID
-#
-#        in Django session framework
-#
-#
-#        Accept the following POST parameters: username, password
-#
-#        Return the REST Framework Token Object''s key.'
-#      operationId: login_create
-#      tags:
-#      - login
-#  /api-auth/logout/:
-#    get:
-#      description: 'Calls Django logout method and delete the Token object
-#
-#        assigned to the current User object.
-#
-#
-#        Accepts/Returns nothing.'
-#      operationId: logout_list
-#      tags:
-#      - logout
-#    post:
-#      description: 'Calls Django logout method and delete the Token object
-#
-#        assigned to the current User object.
-#
-#
-#        Accepts/Returns nothing.'
-#      operationId: logout_create
-#      tags:
-#      - logout
-#  /api-auth/registration/:
-#    post:
-#      operationId: registration_create
-#      tags:
-#      - registration
-#  /api-auth/user/:
-#    get:
-#      description: 'Reads and updates UserModel fields
-#
-#        Accepts GET, PUT, PATCH methods.
-#
-#
-#        Default accepted fields: username, first_name, last_name
-#
-#        Default display fields: pk, username, email, first_name, last_name
-#
-#        Read-only fields: pk, email
-#
-#
-#        Returns UserModel fields.'
-#      operationId: user_read
-#      tags:
-#      - user
-#    patch:
-#      description: 'Reads and updates UserModel fields
-#
-#        Accepts GET, PUT, PATCH methods.
-#
-#
-#        Default accepted fields: username, first_name, last_name
-#
-#        Default display fields: pk, username, email, first_name, last_name
-#
-#        Read-only fields: pk, email
-#
-#
-#        Returns UserModel fields.'
-#      operationId: user_partial_update
-#      tags:
-#      - user
-#    put:
-#      description: 'Reads and updates UserModel fields
-#
-#        Accepts GET, PUT, PATCH methods.
-#
-#
-#        Default accepted fields: username, first_name, last_name
-#
-#        Default display fields: pk, username, email, first_name, last_name
-#
-#        Read-only fields: pk, email
-#
-#
-#        Returns UserModel fields.'
-#      operationId: user_update
-#      tags:
-#      - user
-#servers:
-#- url: ''
